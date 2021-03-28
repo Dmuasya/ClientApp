@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "703801025550",
+    "project_id": "clientapp-d4caf",
+    "storage_bucket": "clientapp-d4caf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:703801025550:android:9784e470b53d19e050085f",
+        "android_client_info": {
+          "package_name": "com.muasya.clientapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "703801025550-33fvmt60e8r3age7fbb818665unfqh5t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAP85wRTyKwYtK-m66asdMSz-Pe2sfOsZ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "703801025550-33fvmt60e8r3age7fbb818665unfqh5t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
