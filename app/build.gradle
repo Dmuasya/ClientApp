@@ -32,6 +32,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -45,6 +48,10 @@ dependencies {
 
 
     implementation platform('com.google.firebase:firebase-bom:26.8.0')
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -75,8 +82,7 @@ dependencies {
     implementation 'com.github.andremion:counterfab:1.2.0'
 
     implementation 'com.firebaseui:firebase-ui-auth:7.1.0'
-
-
+    
 
 
 
