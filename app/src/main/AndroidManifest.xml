@@ -14,8 +14,7 @@
             android:theme="@style/Theme.ClientApp">
 
         </activity>
-        <!-- android:theme="@style/Theme.ClientApp" -->
-<!--        android:theme="@style/Theme.AppCompat.NoActionBar">-->
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,4 +1,4 @@
-package com.muasya.clientapp.ui.gallery
+package com.muasya.clientapp.ui.menu
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,13 +8,12 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.muasya.clientapp.R
-import com.muasya.clientapp.databinding.FragmentGalleryBinding
+import com.muasya.clientapp.databinding.FragmentCategoryBinding
 
-class GalleryFragment : Fragment() {
+class MenuFragment : Fragment() {
 
-    private lateinit var galleryViewModel: GalleryViewModel
-    private var _binding: FragmentGalleryBinding? = null
+    private lateinit var galleryViewModel: MenuViewModel
+    private var _binding: FragmentCategoryBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -26,9 +25,9 @@ class GalleryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         galleryViewModel =
-            ViewModelProvider(this).get(GalleryViewModel::class.java)
+            ViewModelProvider(this).get(MenuViewModel::class.java)
 
-        _binding = FragmentGalleryBinding.inflate(inflater, container, false)
+        _binding = FragmentCategoryBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textGallery

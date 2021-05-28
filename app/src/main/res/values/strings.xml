@@ -13,6 +13,6 @@
     <string name="menu_slideshow">Slideshow</string>
     <string name="popular_categories">Popular Categories</string>
     <string name="best_deals">Best Deals</string>
-
+    <string name="menu_category">Categories</string>
 
 </resources>
