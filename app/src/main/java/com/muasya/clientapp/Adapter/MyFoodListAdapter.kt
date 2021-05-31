@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.muasya.clientapp.Callback.IRecyclerItemClickListener
 import com.muasya.clientapp.Common.Common
 import com.muasya.clientapp.EventBus.CategoryClick
+import com.muasya.clientapp.EventBus.FoodItemClick
 import com.muasya.clientapp.Model.CategoryModel
 import com.muasya.clientapp.Model.FoodModel
 import com.muasya.clientapp.R
@@ -23,6 +24,15 @@ class MyFoodListAdapter (internal var context: Context,
         Glide.with(context).load(foodList.get(position).image).into(holder.img_food_image!!)
         holder.txt_food_name!!.setText(foodList.get(position).name)
         holder.txt_food_price!!.setText(foodList.get(position).price.toString())
+
+        //Event
+        holder.setListener(object:IRecyclerItemClickListener{
+            override fun onItemClick(view: View, pos: Int) {
+                Common.foodSelected = foodList.get(pos)
+                EventBus.getDefault().postSticky(FoodItemClick(true,foodList.get(pos)))
+            }
+
+        })
 
     }
 
@@ -40,8 +50,13 @@ class MyFoodListAdapter (internal var context: Context,
 
 
 
-    inner class MyViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView){
+    inner class MyViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
 
+        override fun onClick(view: View?) {
+            listener!!.onItemClick(view!!,adapterPosition)
+
+        }
 
         var txt_food_name: TextView?=null
         var txt_food_price: TextView?=null
@@ -50,7 +65,12 @@ class MyFoodListAdapter (internal var context: Context,
         var img_fav: ImageView?=null
         var img_cart: ImageView?=null
 
+        internal var listener:IRecyclerItemClickListener?=null
 
+        fun setListener(listener:IRecyclerItemClickListener)
+        {
+            this.listener=listener
+        }
 
         init {
             txt_food_name = itemView.findViewById(R.id.txt_food_name) as TextView
@@ -58,9 +78,9 @@ class MyFoodListAdapter (internal var context: Context,
             img_food_image = itemView.findViewById(R.id.img_food_image) as ImageView
             img_fav = itemView.findViewById(R.id.img_fav) as ImageView
             img_cart = itemView.findViewById(R.id.img_quick_cart) as ImageView
+            itemView.setOnClickListener(this)
 
         }
-
 
     }
 

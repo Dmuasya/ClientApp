@@ -10,7 +10,7 @@
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_food_detail">Food Detail</string>
     <string name="popular_categories">Popular Categories</string>
     <string name="best_deals">Best Deals</string>
     <string name="menu_category">Categories</string>
