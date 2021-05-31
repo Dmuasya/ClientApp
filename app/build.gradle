@@ -82,6 +82,7 @@ dependencies {
     implementation 'com.github.andremion:counterfab:1.2.0'
 
     implementation 'com.firebaseui:firebase-ui-auth:7.1.0'
+    implementation 'org.greenrobot:eventbus:3.1.1'
     
 
 

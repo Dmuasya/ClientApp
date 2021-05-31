@@ -8,9 +8,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.muasya.clientapp.Callback.IRecyclerItemClickListener
 import com.muasya.clientapp.Common.Common
+import com.muasya.clientapp.EventBus.CategoryClick
 import com.muasya.clientapp.Model.CategoryModel
 import com.muasya.clientapp.R
+import org.greenrobot.eventbus.EventBus
 
 class MyCategoriesAdapter (internal var context: Context,
                            internal var categoriesList: List<CategoryModel>):
@@ -18,6 +21,16 @@ class MyCategoriesAdapter (internal var context: Context,
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         Glide.with(context).load(categoriesList.get(position).image).into(holder.category_image!!)
         holder.category_name!!.setText(categoriesList.get(position).name)
+
+        //Event
+        holder.setListener(object:IRecyclerItemClickListener{
+            override fun onItemClick(view: View, pos: Int) {
+                Common.categorySelected = categoriesList.get(pos)
+                EventBus.getDefault().postSticky(CategoryClick(true,categoriesList.get(pos)))
+            }
+
+        })
+
     }
 
     override fun onCreateViewHolder(
@@ -44,15 +57,30 @@ class MyCategoriesAdapter (internal var context: Context,
         }
     }
 
-    inner class MyViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView){
+    inner class MyViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
+
+        override fun onClick(view: View?) {
+            listener!!.onItemClick(view!!,adapterPosition)
+        }
 
         var category_name: TextView?=null
         var category_image: ImageView?=null
 
+        internal var listener:IRecyclerItemClickListener?=null
+
+        fun setListener(listener:IRecyclerItemClickListener)
+        {
+         this.listener=listener
+        }
+
         init {
             category_name = itemView.findViewById(R.id.category_name) as TextView
             category_image = itemView.findViewById(R.id.category_image) as ImageView
+            itemView.setOnClickListener(this)
         }
+
+
     }
 
 }

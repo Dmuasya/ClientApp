@@ -1,8 +1,10 @@
 package com.muasya.clientapp.Common
 
+import com.muasya.clientapp.Model.CategoryModel
 import com.muasya.clientapp.Model.UserModel
 
 object Common {
+    var categorySelected: CategoryModel?=null
     val CATEGORY_REF: String ="Category"
     val FULL_WIDTH_COLUMN: Int = 1
     val DEFAULT_COLUMN_COUNT: Int = 0
