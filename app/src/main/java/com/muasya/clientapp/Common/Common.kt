@@ -5,6 +5,7 @@ import com.muasya.clientapp.Model.FoodModel
 import com.muasya.clientapp.Model.UserModel
 
 object Common {
+    val COMMENT_REF: String="Comments"
     var foodSelected: FoodModel?=null
     var categorySelected: CategoryModel?=null
     val CATEGORY_REF: String ="Category"
