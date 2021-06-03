@@ -19,6 +19,7 @@ import com.muasya.clientapp.Model.CommentModel
 import com.muasya.clientapp.Model.FoodModel
 import com.muasya.clientapp.R
 import com.muasya.clientapp.databinding.FragmentFoodDetailBinding
+import com.muasya.clientapp.ui.slideshow.CommentFragment
 import dmax.dialog.SpotsDialog
 
 class FoodDetailFragment : Fragment() {
@@ -163,6 +164,10 @@ class FoodDetailFragment : Fragment() {
         //Event
         btnRating!!.setOnClickListener{
             showDialogRating()
+        }
+        btnShowComment!!.setOnClickListener {
+            val commentFragment = CommentFragment.getInstance()
+            commentFragment.show(requireActivity().supportFragmentManager,"CommentFragment")
         }
 
     }
