@@ -36,7 +36,7 @@ class FoodDetailFragment : Fragment() {
     private var number_button:ElegantNumberButton?=null
     private var ratingBar:RatingBar?=null
     private var btnShowComment:Button?=null
-
+    private var rdi_group_size:RadioGroup?=null
 
     private var waitingDialog:android.app.AlertDialog?=null
 
@@ -145,6 +145,45 @@ class FoodDetailFragment : Fragment() {
 
         ratingBar!!.rating = it!!.ratingValue.toFloat()
 
+        //Set size
+        for (sizeModel in it!!.size)
+        {
+            val radioButton = RadioButton(context)
+            radioButton.setOnCheckedChangeListener { compoundButton, b ->
+                if (b)
+                    Common.foodSelected!!.userSelectedSize = sizeModel
+                calculateTotalPrice()
+            }
+            val params = LinearLayout.LayoutParams( 0,
+                LinearLayout.LayoutParams.MATCH_PARENT, 1.0f)
+            radioButton.layoutParams = params
+            radioButton.text = sizeModel.name
+            radioButton.tag = sizeModel.price
+
+            rdi_group_size!!.addView(radioButton)
+        }
+
+        //Default first radio button selected
+        if (rdi_group_size!!.childCount>0)
+        {
+            val radioButton = rdi_group_size!!.getChildAt(0) as RadioButton
+            radioButton.isChecked = true
+        }
+
+    }
+
+    private fun calculateTotalPrice() {
+        var totalPrice = Common.foodSelected!!.price!!.toDouble()
+        var displayPrice = 0.0
+
+        //Size
+        totalPrice += Common.foodSelected!!.userSelectedSize!!.price!!.toDouble()
+
+        displayPrice = totalPrice * number_button!!.number.toInt()
+        displayPrice = Math.round(displayPrice *100.0)/100.0
+
+
+        food_price!!.text = StringBuilder("").append(Common.formatPrice(displayPrice)).toString()
     }
 
     private fun initViews(root: View?) {
@@ -160,6 +199,7 @@ class FoodDetailFragment : Fragment() {
         number_button = root!!.findViewById(R.id.number_button) as ElegantNumberButton
         ratingBar = root!!.findViewById(R.id.ratingBar) as RatingBar
         btnShowComment = root!!.findViewById(R.id.btnShowComment) as Button
+        rdi_group_size = root!!.findViewById(R.id.rdi_group_size) as RadioGroup
 
         //Event
         btnRating!!.setOnClickListener{

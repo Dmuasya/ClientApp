@@ -16,6 +16,7 @@
     <string name="menu_category">Categories</string>
     <string name="menu_food_list">Food List</string>
     <string name="name_of_food">Name of Food</string>
+    <string name="size">Size</string>
 
 
 </resources>
