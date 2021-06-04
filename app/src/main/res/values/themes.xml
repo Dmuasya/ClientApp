@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.ClientApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        Theme.MaterialComponents.Light.NoActionBar
+    <style name="Theme.ClientApp" parent="Theme.MaterialComponents.Light.NoActionBar">
+<!--        Theme.MaterialComponents.Light.NoActionBar-->
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -26,6 +26,12 @@
 
     <style name="ToolbarColoredBackArrow" parent="AppTheme">
         <item name="android:textColorSecondary">@android:color/black</item>
+    </style>
+
+    <style name="DialogStyle" parent="Animation.Design.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
 </resources>
