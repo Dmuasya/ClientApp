@@ -32,6 +32,12 @@ class FoodListFragment : Fragment() {
     var adapter : MyFoodListAdapter?=null
 
 
+    override fun onStop() {
+        if (adapter!= null)
+        adapter!!.onStop()
+        super.onStop()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

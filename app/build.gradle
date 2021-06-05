@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'com.google.gms.google-services'
+
+    id 'kotlin-kapt'
 }
 
 android {
@@ -38,6 +40,8 @@ android {
 }
 
 dependencies {
+    def room_version = "2.3.0"
+
     implementation 'com.android.support:multidex:1.0.3'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -83,12 +87,13 @@ dependencies {
     implementation 'com.github.andremion:counterfab:1.2.0'
 
     implementation 'com.firebaseui:firebase-ui-auth:7.1.0'
-    implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
-    implementation 'com.github.andremion:counterfab:1.2.0'
-    
+
+    implementation "androidx.room:room-rxjava2:$room_version"
+//    annotationProcessor "androidx.room:room-compiler:$room_version"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 
 
-
-
+    implementation 'com.github.andremion:counterfab:1.2.2-alpha1'
 }
