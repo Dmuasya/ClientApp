@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
+
 @Entity(tableName = "Cart",primaryKeys = ["uid","foodId","foodSize","foodAddon"])
 class CartItem {
     @NonNull
@@ -26,11 +27,11 @@ class CartItem {
 
     @NonNull
     @ColumnInfo(name = "foodAddon")
-    var foodAddon:String?=""
+    var foodAddon:String=""
 
     @NonNull
     @ColumnInfo(name = "foodSize")
-    var foodSize:String?=""
+    var foodSize:String=""
 
     @ColumnInfo(name = "userPhone")
     var userPhone:String?=""
@@ -42,5 +43,13 @@ class CartItem {
     @ColumnInfo(name = "uid")
     var uid =""
 
-
+    override fun equals(other: Any?): Boolean {
+        if (other === this) return true
+        if (other !is CartItem)
+            return false
+        val cartItem = other as CartItem?
+        return cartItem!!.foodId == this.foodId &&
+                cartItem.foodAddon == this.foodAddon &&
+                cartItem.foodSize == this.foodSize
+    }
 }
