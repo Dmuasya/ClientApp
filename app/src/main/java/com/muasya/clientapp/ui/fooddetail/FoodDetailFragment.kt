@@ -1,6 +1,5 @@
 package com.muasya.clientapp.ui.fooddetail
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -32,7 +30,7 @@ import com.muasya.clientapp.Model.CommentModel
 import com.muasya.clientapp.Model.FoodModel
 import com.muasya.clientapp.R
 import com.muasya.clientapp.databinding.FragmentFoodDetailBinding
-import com.muasya.clientapp.ui.slideshow.CommentFragment
+import com.muasya.clientapp.ui.cart.CommentFragment
 import dmax.dialog.SpotsDialog
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers

@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.muasya.clientapp.Common.Common
 import com.muasya.clientapp.Database.CartDataSource
@@ -20,6 +21,7 @@ import com.muasya.clientapp.Database.LocalCartDataSource
 import com.muasya.clientapp.EventBus.CategoryClick
 import com.muasya.clientapp.EventBus.CountCartEvent
 import com.muasya.clientapp.EventBus.FoodItemClick
+import com.muasya.clientapp.EventBus.HideFABCart
 import com.muasya.clientapp.databinding.ActivityHomeBinding
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -33,6 +35,7 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var cartDataSource: CartDataSource
+    private lateinit var navController: NavController
 
 
     override fun onResume() {
@@ -52,17 +55,17 @@ class HomeActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarHome.toolbar)
         binding.appBarHome.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            navController.navigate(R.id.nav_cart)
         }
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
-        val navController = findNavController(R.id.nav_host_fragment_content_home)
+        navController = findNavController(R.id.nav_host_fragment_content_home)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_menu, R.id.nav_food_detail
+                R.id.nav_home, R.id.nav_menu, R.id.nav_food_detail,
+                R.id.nav_cart
                 //R.id.nav_food_list
             ), drawerLayout
         )
@@ -109,6 +112,17 @@ class HomeActivity : AppCompatActivity() {
         {
             findNavController(R.id.nav_host_fragment_content_home).navigate(R.id.nav_food_detail)
         }
+    }
+
+    @Subscribe(sticky = true,threadMode =  ThreadMode.MAIN)
+    fun onHideFABEvent(event: HideFABCart)
+    {
+        if (event.isHide)
+        {
+            binding.appBarHome.fab.hide()
+        }
+        else
+            binding.appBarHome.fab.show()
     }
 
     @Subscribe(sticky = true,threadMode =  ThreadMode.MAIN)

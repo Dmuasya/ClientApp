@@ -11,7 +11,7 @@ interface CartDataSource {
 
     fun countItemInCart(uid: String): Single<Int>
 
-    fun sumPrice(uid: String): Single<Long>
+    fun sumPrice(uid: String): Single<Double>
 
     fun getItemInCart(foodId: String, uid: String): Single<CartItem>
 

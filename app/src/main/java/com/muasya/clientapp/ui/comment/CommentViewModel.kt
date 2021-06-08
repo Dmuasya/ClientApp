@@ -1,10 +1,8 @@
-package com.muasya.clientapp.ui.slideshow
+package com.muasya.clientapp.ui.cart
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.muasya.clientapp.Model.CommentModel
-import org.w3c.dom.Comment
 
 class CommentViewModel : ViewModel() {
 

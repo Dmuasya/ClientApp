@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun checkUserFromFirebase(user: FirebaseUser) {
-//        dialog!!.show()
+        dialog!!.show()
         userRef!!.child(user!!.uid)
                 .addListenerForSingleValueEvent(object:ValueEventListener{
                     override fun onCancelled(p0: DatabaseError) {

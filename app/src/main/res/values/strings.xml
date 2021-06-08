@@ -19,6 +19,8 @@
     <string name="size">Size</string>
     <string name="add_on">Addon</string>
     <string name="example">Example</string>
+    <string name="menu_cart">Cart</string>
+    <string name="place_order">Place Order</string>
 
 
 </resources>
