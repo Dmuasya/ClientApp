@@ -1,23 +1,27 @@
 package com.muasya.clientapp.ui.cart
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.Adapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.muasya.clientapp.Adapter.MyCartAdapter
+import com.muasya.clientapp.Callback.IMyButtonCallback
 import com.muasya.clientapp.Common.Common
+import com.muasya.clientapp.Common.MySwipeHelper
 import com.muasya.clientapp.Database.CartDataSource
 import com.muasya.clientapp.Database.CartDatabase
 import com.muasya.clientapp.Database.LocalCartDataSource
+import com.muasya.clientapp.EventBus.CountCartEvent
 import com.muasya.clientapp.EventBus.HideFABCart
 import com.muasya.clientapp.EventBus.UpdateItemInCart
 import com.muasya.clientapp.R
@@ -43,6 +47,7 @@ class CartFragment : Fragment() {
     var txt_total_price:TextView?=null
     var group_place_holder:CardView?=null
     var recycler_cart:RecyclerView?=null
+    var adapter:MyCartAdapter?=null
 
 
     // This property is only valid between onCreateView and
@@ -79,7 +84,7 @@ class CartFragment : Fragment() {
                 group_place_holder!!.visibility = View.VISIBLE
                 txt_empty_cart!!.visibility = View.GONE
 
-                val adapter = MyCartAdapter(requireContext(),it)
+                adapter = MyCartAdapter(requireContext(),it)
                 recycler_cart!!.adapter = adapter
             }
         } )
@@ -88,18 +93,83 @@ class CartFragment : Fragment() {
 
     private fun initViews(root:View) {
 
+        setHasOptionsMenu(true) //Important, menu will neve inflate if not added
+
         cartDataSource = LocalCartDataSource(CartDatabase.getInstance(requireContext()).cartDAO())
 
         recycler_cart = root.findViewById(R.id.recycler_cart) as RecyclerView
         recycler_cart!!.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(context)
         recycler_cart!!.layoutManager = layoutManager
+        recycler_cart!!.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
+
+        val swipe = object:MySwipeHelper(requireContext(), recycler_cart!!, 200)
+        {
+            override fun instantiateMyButton(
+                viewHolder: RecyclerView.ViewHolder,
+                buffer: MutableList<MyButton>
+            ) {
+                buffer.add(MyButton(context!!,
+                "Delete",
+                30,
+                0,
+                Color.parseColor("#FF3C30"),
+                    object : IMyButtonCallback{
+                        override fun onClick(pos: Int) {
+                            val deleteItem = adapter!!.getItemAtPosition(pos)
+                            cartDataSource!!.deleteCart(deleteItem)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(object:SingleObserver<Int>{
+                                    override fun onSuccess(t: Int) {
+                                        adapter!!.notifyItemRemoved(pos)
+                                        sumCart()
+                                        EventBus.getDefault().postSticky(CountCartEvent(true))
+                                        Toast.makeText(context, "Delete item success", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                    override fun onSubscribe(d: Disposable) {
+
+                                    }
+
+                                    override fun onError(e: Throwable) {
+                                        Toast.makeText(context, ""+e.message, Toast.LENGTH_SHORT).show()
+                                    }
+
+                                })
+                        }
+                    }
+                ))
+            }
+
+        }
 
         txt_empty_cart = root.findViewById(R.id.txt_empty_cart) as TextView
         txt_total_price = root.findViewById(R.id.txt_total_price) as TextView
         group_place_holder = root.findViewById(R.id.group_place_holder) as CardView
+    }
 
+    private fun sumCart() {
+        cartDataSource!!.sumPrice(Common.currentUser!!.uid!!)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object:SingleObserver<Double>{
+                override fun onSuccess(t: Double) {
+                    txt_total_price!!.text = StringBuilder("Total: ")
+                        .append(t)
+                }
 
+                override fun onSubscribe(d: Disposable) {
+
+                }
+
+                override fun onError(e: Throwable) {
+                    if (!e.message!!.contains("Query returned empty"))
+                        Toast.makeText(context, ""+e.message, Toast.LENGTH_SHORT).show()
+
+                }
+
+            });
     }
 
     override fun onStart() {
@@ -133,7 +203,7 @@ class CartFragment : Fragment() {
                     }
 
                     override fun onSubscribe(d: Disposable) {
-                        TODO("Not yet implemented")
+
                     }
 
                     override fun onError(e: Throwable) {
@@ -158,10 +228,45 @@ class CartFragment : Fragment() {
                 }
 
                 override fun onError(e: Throwable) {
-                    Toast.makeText(context, "[SUM CART]"+e.message, Toast.LENGTH_SHORT).show()
+                    if (!e.message!!.contains("Query returned empty"))
+                        Toast.makeText(context, "[SUM CART]"+e.message, Toast.LENGTH_SHORT).show()
                 }
-
             })
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu!!.findItem(R.id.action_settings).isVisible = false //Hide settings menu while in cart
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater!!.inflate(R.menu.cart_menu,menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item!!.itemId == R.id.action_clear_cart)
+        {
+            cartDataSource!!.cleanCart(Common.currentUser!!.uid!!)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object:SingleObserver<Int>{
+                    override fun onSuccess(t: Int) {
+                        Toast.makeText(context, "Clear Cart Success",Toast.LENGTH_SHORT)
+                        EventBus.getDefault().postSticky(CountCartEvent(true))
+
+                    }
+                    override fun onSubscribe(d: Disposable) {
+
+                    }
+                    override fun onError(e: Throwable) {
+                        Toast.makeText(context, ""+e.message,Toast.LENGTH_SHORT)
+                    }
+
+                })
+            return  true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 

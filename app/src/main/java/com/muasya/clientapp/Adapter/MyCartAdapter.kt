@@ -54,6 +54,10 @@ class MyCartAdapter (internal var context: Context,
         }
     }
 
+    fun getItemAtPosition(pos: Int): CartItem {
+        return cartItems[pos]
+    }
+
     inner class MyViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView)
     {
         lateinit var img_cart:ImageView

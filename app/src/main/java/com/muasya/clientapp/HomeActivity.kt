@@ -148,7 +148,10 @@ class HomeActivity : AppCompatActivity() {
                 }
 
                 override fun onError(e: Throwable) {
-                    Toast.makeText(this@HomeActivity, "[COUNT CART]"+e.message,Toast.LENGTH_SHORT).show()
+                    if (!e.message!!.contains("Query returned empty"))
+                      Toast.makeText(this@HomeActivity, "[COUNT CART]"+e.message,Toast.LENGTH_SHORT).show()
+                    else
+                        binding.appBarHome.fab.count = 0
                 }
 
             })
