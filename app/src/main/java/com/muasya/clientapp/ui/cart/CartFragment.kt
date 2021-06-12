@@ -1,12 +1,12 @@
 package com.muasya.clientapp.ui.cart
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.*
-import android.widget.Adapter
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -42,6 +42,8 @@ class CartFragment : Fragment() {
     private var recyclerViewState: Parcelable?=null
     private lateinit var cartViewModel: CartViewModel
     private var _binding: FragmentCartBinding? = null
+    private lateinit var btn_place_order:Button
+
 
     var txt_empty_cart:TextView?=null
     var txt_total_price:TextView?=null
@@ -147,6 +149,54 @@ class CartFragment : Fragment() {
         txt_empty_cart = root.findViewById(R.id.txt_empty_cart) as TextView
         txt_total_price = root.findViewById(R.id.txt_total_price) as TextView
         group_place_holder = root.findViewById(R.id.group_place_holder) as CardView
+
+        btn_place_order = root.findViewById(R.id.btn_place_order) as Button
+
+        //Event
+        btn_place_order!!.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("One more step!")
+
+            val view = LayoutInflater.from(context).inflate(R.layout.layout_place_order, null)
+
+            val edt_address = view.findViewById<View>(R.id.edt_address) as EditText
+            val rdi_home = view.findViewById<View>(R.id.rdi_home_address) as RadioButton
+            val rdi_other_address = view.findViewById<View>(R.id.rdi_other_address) as RadioButton
+            val rdi_ship_to_this_address = view.findViewById<View>(R.id.rdi_ship_this_address) as RadioButton
+            val rdi_cod = view.findViewById<View>(R.id.rdi_cod) as RadioButton
+            val rdi_braintree = view.findViewById<View>(R.id.rdi_braintree) as RadioButton
+
+            //Data
+            edt_address.setText(Common.currentUser!!.address!!) //By default we checked rdi_home, so we'll display user address
+
+            //Event
+            rdi_home.setOnCheckedChangeListener { compoundButton, b ->
+                if (b)
+                {
+                    edt_address.setText(Common.currentUser!!.address!!)
+                }
+            }
+            rdi_other_address.setOnCheckedChangeListener { compoundButton, b ->
+                if (b)
+                {
+                    edt_address.setText("")
+                    edt_address.setHint("Enter your address")
+                }
+            }
+            rdi_ship_to_this_address.setOnCheckedChangeListener { compoundButton, b ->
+                if (b)
+                {
+                    Toast.makeText(requireContext(), "Implement late with Google API", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            builder.setView(view)
+            builder.setNegativeButton("NO", {dialogInterface, _ -> dialogInterface.dismiss() })
+                .setPositiveButton("YES",{dialogInterface, _ -> Toast.makeText(requireContext(), "Implement late",Toast.LENGTH_SHORT).show()})
+
+            val dialog = builder.create()
+            dialog.show()
+        }
     }
 
     private fun sumCart() {
@@ -155,7 +205,7 @@ class CartFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object:SingleObserver<Double>{
                 override fun onSuccess(t: Double) {
-                    txt_total_price!!.text = StringBuilder("Total: ")
+                    txt_total_price!!.text = StringBuilder("Total: Ksh")
                         .append(t)
                 }
 
@@ -220,7 +270,7 @@ class CartFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object:SingleObserver<Double>{
                 override fun onSuccess(price: Double) {
-                    txt_total_price!!.text = StringBuilder("Total: ")
+                    txt_total_price!!.text = StringBuilder("Total: Ksh")
                         .append(Common.formatPrice(price))
                 }
 

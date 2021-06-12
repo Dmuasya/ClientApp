@@ -9,8 +9,10 @@ import android.widget.TextView
 import com.asksira.loopingviewpager.LoopingPagerAdapter
 import com.asksira.loopingviewpager.LoopingViewPager
 import com.bumptech.glide.Glide
+import com.muasya.clientapp.EventBus.BestDealItemClick
 import com.muasya.clientapp.Model.BestDealModel
 import com.muasya.clientapp.R
+import org.greenrobot.eventbus.EventBus
 
 class MyBestDealsAdapter (context: Context,
                           itemList: List<BestDealModel>,
@@ -26,6 +28,10 @@ class MyBestDealsAdapter (context: Context,
     //Set data
         Glide.with(context).load(itemList[listPosition].image).into(imageView)
         textView.text = itemList[listPosition].name
+
+        convertView.setOnClickListener {
+            EventBus.getDefault().postSticky(BestDealItemClick(itemList[listPosition]))
+        }
     }
 
 }

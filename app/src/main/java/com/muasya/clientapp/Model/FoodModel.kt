@@ -1,5 +1,6 @@
 package com.muasya.clientapp.Model
 
+
 class FoodModel {
     var key: String?=null
     var name: String?=null

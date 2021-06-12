@@ -22,6 +22,7 @@
     <string name="menu_cart">Cart</string>
     <string name="place_order">Place Order</string>
     <string name="action_clear_cart">Clear Cart</string>
+    <string name="sign_out">Sign out</string>
 
 
 </resources>
