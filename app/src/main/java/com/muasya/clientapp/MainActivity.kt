@@ -16,6 +16,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.database.FirebaseDatabase.*
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 import com.muasya.clientapp.Common.Common
 import com.muasya.clientapp.Model.UserModel
 import com.muasya.clientapp.Remote.ICloudFunctions
@@ -67,17 +73,36 @@ class MainActivity : AppCompatActivity() {
         dialog = SpotsDialog.Builder().setContext(this).setCancelable(false).build()
         cloudFunctions = getInstance().create(ICloudFunctions::class.java)
         listener = FirebaseAuth.AuthStateListener { firebaseAuth ->
-            val user = firebaseAuth.currentUser
-            if(user != null)
-            {
 
-            checkUserFromFirebase(user!!)
+            Dexter.withActivity(this@MainActivity)
+                .withPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(object:PermissionListener{
+                    override fun onPermissionGranted(response: PermissionGrantedResponse?) {
+                        val user = firebaseAuth.currentUser
+                        if(user != null)
+                        {
+                            checkUserFromFirebase(user!!)
+                        }
+                        else
+                        {
+                            phoneLogin()
+                        }
+                    }
 
-            }
-            else
-            {
-                    phoneLogin()
-            }
+                    override fun onPermissionRationaleShouldBeShown(
+                        permission: PermissionRequest?,
+                        token: PermissionToken?
+                    ) {
+                        //enter some
+                    }
+
+                    override fun onPermissionDenied(response: PermissionDeniedResponse?) {
+                        Toast.makeText(this@MainActivity, "You must accept this permission to use app",
+                            Toast.LENGTH_SHORT).show()
+                    }
+
+
+                }).check()
         }
     }
     private fun checkUserFromFirebase(user: FirebaseUser) {
