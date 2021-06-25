@@ -167,15 +167,14 @@ class FoodDetailFragment : Fragment(), TextWatcher {
                         //Apply rating
                         val sumRating = foodModel.ratingValue!!.toDouble() + (ratingValue)
                         val ratingCount = foodModel.ratingCount+1
-                        val result = sumRating/ratingCount
 
                         val updateData = HashMap<String,Any>()
-                        updateData["ratingValue"] = result
+                        updateData["ratingValue"] = sumRating
                         updateData["ratingCount"] = ratingCount
 
                         //Update data in variable
                         foodModel.ratingCount = ratingCount
-                        foodModel.ratingValue = result
+                        foodModel.ratingValue = sumRating
 
                         dataSnapshot.ref
                             .updateChildren(updateData)
@@ -202,7 +201,7 @@ class FoodDetailFragment : Fragment(), TextWatcher {
         food_description!!.text= StringBuilder(it!!.description!!)
         food_price!!.text= StringBuilder(it!!.price!!.toString())
 
-        ratingBar!!.rating = it!!.ratingValue.toFloat()
+        ratingBar!!.rating = it!!.ratingValue.toFloat() / it!!.ratingCount
 
         //Set size
         for (sizeModel in it!!.size)
@@ -448,7 +447,7 @@ class FoodDetailFragment : Fragment(), TextWatcher {
                 chip_group_user_selected_addon!!.addView(chip)
             }
 
-        }else if (Common.foodSelected!!.userSelectedAddon!!.size == 0)
+        }else
             chip_group_user_selected_addon!!.removeAllViews()
     }
 

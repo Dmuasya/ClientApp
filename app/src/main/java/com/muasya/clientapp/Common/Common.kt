@@ -9,8 +9,10 @@ import android.widget.TextView
 import com.muasya.clientapp.Model.*
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import java.util.*
 
 object Common {
+    val ORDER_REF: String = "Order"
     val COMMENT_REF: String="Comments"
     var foodSelected: FoodModel?=null
     var categorySelected: CategoryModel?=null
@@ -69,6 +71,13 @@ object Common {
         txtSpannable.setSpan(boldSpan,0,name!!.length,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         builder.append(txtSpannable)
         txtUser!!.setText(builder, TextView.BufferType.SPANNABLE)
+    }
+
+    fun createOrderNumber(): String {
+        return StringBuilder()
+            .append(System.currentTimeMillis())
+            .append(Math.abs(Random().nextInt()))
+            .toString()
     }
 
 

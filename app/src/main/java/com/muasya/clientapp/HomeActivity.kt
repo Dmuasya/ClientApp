@@ -191,21 +191,29 @@ class HomeActivity : AppCompatActivity() {
             binding.appBarHome.fab.show()
     }
 
+
+
     @Subscribe(sticky = true,threadMode =  ThreadMode.MAIN)
     fun onCountCartEvent(event: CountCartEvent)
     {
         if (event.isSuccess)
         {
+
             countCartItem()
         }
+
     }
+
+
 
     @Subscribe(sticky = true,threadMode =  ThreadMode.MAIN)
     fun onPopularFoodItemClick(event: PopularFoodItemClick)
     {
         if (event.popularCategoryModel != null)
         {
+
             dialog!!.show()
+
             FirebaseDatabase.getInstance()
                 .getReference("Category")
                 .child(event.popularCategoryModel!!.menu_id!!)
@@ -219,6 +227,7 @@ class HomeActivity : AppCompatActivity() {
                         if (p0.exists())
                         {
                             Common.categorySelected = p0.getValue(CategoryModel::class.java)
+                            Common.categorySelected!!.menu_id = p0.key
 
                             //Load food
                             FirebaseDatabase.getInstance()
@@ -234,11 +243,14 @@ class HomeActivity : AppCompatActivity() {
                                         Toast.makeText(this@HomeActivity, ""+p0.message,Toast.LENGTH_SHORT).show()
                                     }
 
-                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                    override fun onDataChange(p0: DataSnapshot) {
                                         if (p0.exists())
                                         {
                                             for (foodSnapshot in p0.children)
+                                            {
                                                 Common.foodSelected = foodSnapshot.getValue(FoodModel::class.java)
+                                                Common.foodSelected!!.key = foodSnapshot.key
+                                            }
                                             navController!!.navigate(R.id.nav_food_detail)
                                         }
                                         else
@@ -279,6 +291,7 @@ class HomeActivity : AppCompatActivity() {
                         if (p0.exists())
                         {
                             Common.categorySelected = p0.getValue(CategoryModel::class.java)
+                            Common.categorySelected!!.menu_id = p0.key
 
                             //Load food
                             FirebaseDatabase.getInstance()
@@ -294,12 +307,15 @@ class HomeActivity : AppCompatActivity() {
                                         Toast.makeText(this@HomeActivity, ""+p0.message,Toast.LENGTH_SHORT).show()
                                     }
 
-                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                    override fun onDataChange(p0: DataSnapshot) {
                                         if (p0.exists())
                                         {
                                             for (foodSnapshot in p0.children)
+                                            {
                                                 Common.foodSelected = foodSnapshot.getValue(FoodModel::class.java)
-                                            navController!!.navigate(R.id.nav_food_detail)
+                                                Common.foodSelected!!.key = foodSnapshot.key
+                                            }
+                                                navController!!.navigate(R.id.nav_food_detail)
                                         }
                                         else
                                         {
