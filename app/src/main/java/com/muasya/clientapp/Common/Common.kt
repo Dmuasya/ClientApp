@@ -12,6 +12,7 @@ import java.text.DecimalFormat
 import java.util.*
 
 object Common {
+    var currentToken:String = ""
     val ORDER_REF: String = "Order"
     val COMMENT_REF: String="Comments"
     var foodSelected: FoodModel?=null

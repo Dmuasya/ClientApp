@@ -114,21 +114,27 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     override fun onDataChange(p0: DataSnapshot) {
-                        if(p0.exists())
-                        {
-                            val userModel = p0.getValue(UserModel::class.java)
-                            goToHomeActivity(userModel)
-                        }
-                        else
-                        {
+                        if(p0.exists()) {
+                            compositeDisposable.add(cloudFunctions!!.getToken()
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe ({ braintreeToken ->
+
+
+                                    dialog!!.dismiss()
+                                    val userModel = p0.getValue(UserModel::class.java)
+                                    goToHomeActivity(userModel,braintreeToken.token)
+
+                                }, { throwable ->
+                                    dialog!!.dismiss()
+                                    Toast.makeText(this@MainActivity,""+throwable.message,Toast.LENGTH_SHORT).show()
+                                }));
+                        } else {
+                            dialog!!.dismiss()
                             showRegisterDialog(user!!)
                         }
-
-                        dialog!!.dismiss()
                     }
-
                 })
-
     }
 
     private fun showRegisterDialog(user:FirebaseUser) {
@@ -151,12 +157,12 @@ class MainActivity : AppCompatActivity() {
         builder.setPositiveButton("REGISTER") {dialogInterface, i ->
             if(TextUtils.isDigitsOnly(edt_name.text.toString()))
             {
-                Toast.makeText(this@MainActivity,"Please enter your name",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity,"Please enter your name",Toast.LENGTH_SHORT)
+                    .show()
                 return@setPositiveButton
-            }
-            else if(TextUtils.isDigitsOnly(edt_address.text.toString()))
-            {
-                Toast.makeText(this@MainActivity,"Please enter your address",Toast.LENGTH_SHORT).show()
+            }else if(TextUtils.isDigitsOnly(edt_address.text.toString())) {
+                Toast.makeText(this@MainActivity,"Please enter your address",Toast.LENGTH_SHORT)
+                    .show()
                 return@setPositiveButton
             }
 
@@ -170,13 +176,31 @@ class MainActivity : AppCompatActivity() {
         userRef!!.child(user!!.uid)
                 .setValue(userModel)
                 .addOnCompleteListener{task ->
-                    if (task.isSuccessful)
-                    {
+                    if (task.isSuccessful){
+                        compositeDisposable.add(cloudFunctions.getToken()
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({ braintreeToken ->
 
-                        dialogInterface.dismiss()
-                        Toast.makeText(this@MainActivity, "Please enter your address",Toast.LENGTH_SHORT).show()
+                                dialogInterface.dismiss()
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "Congratulation ! Register success!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
 
-                        goToHomeActivity(userModel)
+                                goToHomeActivity(userModel,braintreeToken.token)
+
+                            },{t: Throwable? ->
+
+                                dialogInterface.dismiss()
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    ""+t!!.message,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
+                            }))
                     }
                 }
         }
@@ -186,8 +210,9 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun goToHomeActivity(userModel: UserModel?) {
+    private fun goToHomeActivity(userModel: UserModel?,token:String?) {
         Common.currentUser = userModel!!
+        Common.currentToken = token!!
         startActivity(Intent (this@MainActivity, HomeActivity::class.java))
         finish()
 
